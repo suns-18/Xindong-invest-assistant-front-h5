@@ -8,7 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Detail: typeof import('./src/components/Detail.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Recommend: typeof import('./src/components/Recommend.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -19,11 +18,9 @@ declare module 'vue' {
     VanCheckbox: typeof import('vant/es')['Checkbox']
     VanCol: typeof import('vant/es')['Col']
     VanDivider: typeof import('vant/es')['Divider']
-    VanField: typeof import('vant/es')['Field']
     VanIcon: typeof import('vant/es')['Icon']
     VanImage: typeof import('vant/es')['Image']
     VanNavBar: typeof import('vant/es')['NavBar']
-    VanPiimg: typeof import('vant/es')['Piimg']
     VanRadio: typeof import('vant/es')['Radio']
     VanRadioGroup: typeof import('vant/es')['RadioGroup']
     VanRow: typeof import('vant/es')['Row']
