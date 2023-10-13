@@ -9,7 +9,7 @@ import router from "../../ts/router.ts";
       placeholder="请输入搜索关键词"
       input-align="center"
     />
-    <recommend style="margin-block:3rem"></recommend>
+    <recommend style="margin-bottom:3rem"></recommend>
 <!--    -->
 <!--    <p>没有符合需求的？-->
 <!--        <van-button type="primary" block-->
