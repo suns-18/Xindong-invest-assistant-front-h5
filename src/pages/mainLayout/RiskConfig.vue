@@ -1,6 +1,3 @@
-<script setup lang="ts">
-
-</script>
 
 <template>
     <div class="risk-assessment">
@@ -39,6 +36,8 @@ import {showFailToast, showSuccessToast} from "vant";
 import router from "../../ts/router.ts";
 import {useRiskConfigStore} from "../../ts/store/risk-config-store.ts";
 import pinia from "../../ts/store.ts";
+
+showSuccessToast('已经保存您的问卷进度')
 
 const riskConfigStore = useRiskConfigStore(pinia)
 
@@ -108,7 +107,7 @@ const questions = ref([
     },
 ])
 
-const submitAnswers = () => {
+const submitAnswers = async () => {
     let notFinished = false
     questions.value.forEach((question, index) => {
         if (!answers.value[index]) {
@@ -125,7 +124,7 @@ const submitAnswers = () => {
     showSuccessToast('提交成功')
     riskConfigStore.data = answers.value
 
-    router.push('/riskConfig/result');
+    await router.push('/riskConfig/result');
 };
 
 const submitButtonStyle = {

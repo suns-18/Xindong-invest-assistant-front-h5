@@ -31,12 +31,24 @@ const mapper = [{
         meta: {title: '风险评估结果 - 信东智能投顾'}
     },{
         path: '/investSimulation/purchased',
-        component: () => import('../pages/mainLayout/ISPurchased.vue'),
+        component: () => import('../pages/mainLayout/ISPossesion.vue'),
         meta: {title: '模拟持仓 - 信东智能投顾'}
+    },{
+        path: '/investSimulation/finished',
+        component: () => import('../pages/mainLayout/ISResult.vue'),
+        meta: {title: '完成模拟购买 - 信东智能投顾'}
     },{
         path: '/investSimulation/goPurchase',
         component: () => import('../pages/mainLayout/ISGoPurchase.vue'),
         meta: {title: '模拟购买 - 信东智能投顾'}
+    },{
+        path: '/investSimulation/sell',
+        component: () => import('../pages/mainLayout/ISSell.vue'),
+        meta: {title: '模拟卖出 - 信东智能投顾'}
+    },{
+        path: '/record',
+        component: () => import('../pages/mainLayout/Record.vue'),
+        meta: {title: '交易记录 - 信东智能投顾'}
     },{
         // 404 Page
         path: '/:pathMatch(.*)*',
