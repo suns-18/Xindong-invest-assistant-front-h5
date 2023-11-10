@@ -12,7 +12,7 @@ import Recommend from "../../components/Recommend.vue";
       placeholder="请输入搜索关键词"
       input-align="center"
     />
-    <recommend></recommend>
+    <recommend indicator="0"></recommend>
 </template>
 
 <style scoped>
