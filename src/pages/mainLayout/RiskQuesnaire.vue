@@ -87,13 +87,15 @@ const submitAnswers = async () => {
     const response = await axios.post('/answer/save', {
       answers: answers.value,
     });
-
-    if (response.data.code === 0) {
+    console.log(answers.value);
+    console.log('服务器响应：', response);
+    if (response.data && response.data.code === 0) {
       showSuccessToast('提交成功');
       riskConfigStore.data = answers.value;
       await router.push('/riskConfig/result');
     } else {
-      showFailToast(response.data.msg);
+      console.error('提交失败：', response.data ? response.data.msg : '未知错误');
+      showFailToast(response.data ? response.data.msg : '提交失败，请稍后重试');
     }
   } catch (error) {
     console.error('提交答案时出错：', error);
