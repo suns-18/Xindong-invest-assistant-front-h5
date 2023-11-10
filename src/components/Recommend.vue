@@ -55,11 +55,16 @@ const props = defineProps(["indicator"])
             <van-row justify="center" align="center">
                 <van-col span="20">
                     <van-card
-                            :price="item.price.toFixed(2)"
+
                             :title="item.name"
                             :desc="item.details"
                             @click="router.push(`/recommend/detail/${item.id}`)"
                     >
+                        <template #price>
+                            <h2 style="color: orangered">
+                                <strong>￥{{ item.price.toFixed(2) }}
+                                </strong></h2>
+                        </template>
                     </van-card>
                 </van-col>
                 <van-col span="4">
