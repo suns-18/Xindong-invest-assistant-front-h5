@@ -3,35 +3,36 @@
 import router from "../ts/router.ts";
 import {ref} from "vue";
 import {Product} from "../ts/model.ts";
-import {showSuccessToast} from "vant";
+import {showFailToast, showSuccessToast} from "vant";
+import axios from "../ts/axios";
 
-const list = ref<Product[]>([
-    {
-        id: 1,
-        name: "产品1",
-        description: "描述信息1",
-        price: "2.00",
-        thumb: "https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
-    }, {
-        id: 2,
-        name: "产品2",
-        description: "描述信息2",
-        price: "2.00",
-        thumb: "https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
-    }, {
-        id: 3,
-        name: "产品3",
-        description: "描述信息3",
-        price: "2.00",
-        thumb: "https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
-    }, {
-        id: 4,
-        name: "产品4",
-        description: "描述信息4",
-        price: "2.00",
-        thumb: "https://fastly.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
+
+const list = ref([
+  {
+    "product": {
+      "id": 0,
+      "name": "string",
+      "details": "string",
+      "price": 0,
+      "antiRisk": 0,
+      "flexibility": 0,
+      "returnRate": 0,
+      "state": 0
     }
-])
+  }
+  ],)
+
+const initComponent = () => {
+  let res = await axios.get(`/product/sortByComprehensive`)
+
+  if(!res.data["code"]){
+    showFailToast(res.data["msg"])
+    return
+  }
+
+  list.value = res.data["data"]
+}
+initComponent()
 </script>
 
 <template>
