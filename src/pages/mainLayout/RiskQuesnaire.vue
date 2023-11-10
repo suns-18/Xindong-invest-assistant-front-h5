@@ -30,94 +30,131 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import {showFailToast, showSuccessToast} from "vant";
-import router from "../../ts/router.ts";
-import {useRiskConfigStore} from "../../ts/store/risk-config-store.ts";
-import pinia from "../../ts/store.ts";
-import {indexToAlphabets} from "../../ts/transcript.ts";
-import axios from "../../ts/axios.ts";
+import { ref } from 'vue';
+import { showFailToast, showSuccessToast } from 'vant';
+import router from '../../ts/router.ts';
+import { useRiskConfigStore } from '../../ts/store/risk-config-store.ts';
+import pinia from '../../ts/store.ts';
+import { indexToAlphabets } from '../../ts/transcript.ts';
+import axios from '../../ts/axios.ts';
 
-//showSuccessToast('已经保存您的问卷进度')
+const riskConfigStore = useRiskConfigStore(pinia);
 
-const riskConfigStore = useRiskConfigStore(pinia)
-
-const answers = ref([{id: 0, question: 0, option: 0}])
+const answers = ref([{ id: 0, question: 0, option: 0 }]);
 const questions = ref([
-    {
-        "title": {
-            "id": 0,
-            "title": "string"
-        },
-        "options": [
-            {
-                "id": 0,
-                "question": 0,
-                "title": "string",
-                "value": 0,
-                "questionType": 0
-            }
-        ]
-    }
-],)
+  {
+    title: {
+      id: 0,
+      title: 'string',
+    },
+    options: [
+      {
+        id: 0,
+        question: 0,
+        title: 'string',
+        value: 0,
+        questionType: 0,
+      },
+    ],
+  },
+]);
 
 const submitAnswers = async () => {
-    let notFinished = false
-    questions.value.forEach((question, index) => {
-        if (!answers.value[index]) {
-            notFinished = true
-            return
-        }
-    })
+  let notFinished = false;
 
-    if (notFinished) {
-        showFailToast('您还有未完成的配置项')
-        return
+  // Check if all questions have been answered
+  questions.value.forEach((question, index) => {
+    if (!answers.value[index] || !answers.value[index].option) {
+      notFinished = true;
+      return;
     }
+  });
 
-    answers.value.forEach((item, index) => {
-        answers.value[index].question
-            = questions.value[index].title.id
-    })
+  if (notFinished) {
+    showFailToast('您还有未完成的配置项');
+    return;
+  }
 
-    console.log(answers.value)
+  // Format answers for submission
+  const formattedAnswers = answers.value.map((item) => ({
+    id: item.id,
+    question: item.question,
+    option: item.option,
+  }));
 
-    showSuccessToast('提交成功')
-    riskConfigStore.data = answers.value
+  try {
+    // Post answers to the server
+    const response = await axios.post('/api/answer/save', {
+      answers: formattedAnswers,
+    });
 
-
-    await router.push('/riskConfig/result');
+    if (response.data.code === 0) {
+      showSuccessToast('提交成功');
+      riskConfigStore.data = formattedAnswers;
+      await router.push('/riskConfig/result');
+    } else {
+      showFailToast(response.data.msg);
+    }
+  } catch (error) {
+    console.error('提交答案时出错：', error);
+    showFailToast('提交失败，请稍后重试');
+  }
 };
 
 const initComponent = async () => {
-    let res = await axios.get(`/question/queryList`)
+  try {
+    let res = await axios.get(`/question/queryList`);
 
-    if (!res.data["code"]) {
-        showFailToast(res.data["msg"])
-        return
+    if (res.data.code === 0) {
+      answers.value.splice(0, answers.value.length);
+      questions.value = res.data.data;
+      questions.value.forEach((item, index) => {
+        answers.value.push({ id: index + 1, question: item.title.id, option: 0 });
+      });
+    } else {
+      showFailToast(res.data.msg);
     }
+  } catch (error) {
+    console.error('初始化组件时出错：', error);
+    showFailToast('初始化失败，请稍后重试');
+  }
+};
+initComponent();
+const formattedAnswers = answers.value.map(item => ({
+  id: item.id,
+  question: item.question,
+  option: item.option,
+}));
 
-    answers.value.splice(0, answers.value.length)
-    questions.value = res.data["data"]
-    questions.value.forEach((item, index) => {
-        answers.value.push({id: index + 1, question: item.title.id, option: 0})
-    })
+try {
+  // 将答案提交到服务器
+  const response = await axios.post('/answer/save', {
+    answers: formattedAnswers,
+  });
 
+  if (response.data.code === 0) {
+    showSuccessToast('提交成功');
+    riskConfigStore.data = formattedAnswers;
+    await router.push('/riskConfig/result');
+  } else {
+    showFailToast(response.data.msg);
+  }
+} catch (error) {
+  console.error('提交答案时出错：', error);
+  showFailToast('提交失败，请稍后重试');
 }
-initComponent()
-
+};
 </script>
 
 <style scoped>
 .risk-assessment {
-    position: relative;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #e5e5e5;
-    border-radius: 5px;
-    background-color: #f5f5f5;
-    min-height: 500px;
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  min-height: 500px;
 }
-
 </style>
