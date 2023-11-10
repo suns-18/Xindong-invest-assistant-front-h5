@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import  Recommend from "../../components/Recommend.vue";
-import router from "../../ts/router.ts";
+import Recommend from "../../components/Recommend.vue";
+
 </script>
 
 <template>
