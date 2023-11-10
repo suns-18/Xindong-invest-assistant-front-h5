@@ -120,46 +120,45 @@ initComponent()
                 </van-grid-item>
             </van-grid>
             <br/>
-            <!--            <table>
-														<thead>
-														<tr>
-																<th>产品名</th>
-																<th>盈亏</th>
-																<th>持仓</th>
-																<th>成本</th>
-																<th>现价</th>
-																<th>购买时间</th>
-																<th>操作</th>
-														</tr>
-														</thead>
-														<tbody>
-														<tr v-for="(item,index) in stat.list">
-																<td>{{ item.product.name }}</td>
-																<td>
-																		<p>￥{{
-																				((item.product.price - item.purchasePrice)
-																					* item.amount).toFixed(2)
-																				}}</p>
-																		<p>{{
-																				((item.product.price - item.purchasePrice)
-																					/ item.product.price).toFixed(2)
-																				}}%</p>
-																</td>
-																<td>{{ item.amount }}</td>
-																<td>{{ item.purchasePrice }}</td>
-																<td>{{ item.product.price }}</td>
-																<td>{{ item.purchaseDate }}</td>
-																<td>
-																		<van-button type="danger"
-																								size="large"
-																								@click="goSell">
-																				<van-icon name="bill"/>
-																				卖出
-																		</van-button>
-																</td>
-														</tr>
-														</tbody>
-												</table>-->
+            <table>
+                <thead>
+                <tr>
+                    <th>产品名</th>
+                    <th>盈亏情况</th>
+                    <th>持有数量</th>
+                    <th>成本<br/>现价</th>
+                    <th>购买时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(item,index) in stat.list">
+                    <td>{{ item.product.name }}</td>
+                    <td>
+                        <p>￥{{
+														((item.product.price - item.purchasePrice)
+															* item.amount).toFixed(2)
+                            }}</p>
+                        <p>{{
+														((item.product.price - item.purchasePrice)
+															/ item.product.price).toFixed(2)
+                            }}%</p>
+                    </td>
+                    <td>{{ item.amount }}</td>
+                    <td>￥{{ item.purchasePrice }}<br/>
+                        ￥{{ item.product.price }}</td>
+                    <td>{{ localTime(item.purchaseDate) }}</td>
+                    <td>
+                        <van-button type="danger"
+                                    size="large"
+                                    @click="goSell">
+                            <van-icon name="bill"/>
+                            卖出
+                        </van-button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </van-tab>
         <van-tab title="交易记录">
             <table>
