@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import router from "../ts/router.ts";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {showFailToast, showSuccessToast} from "vant";
 import axios from "../ts/axios";
 import {Product} from "../ts/model.ts";
@@ -23,9 +23,9 @@ const list = ref<Product[]>([
 const initComponent = async () => {
     let indicator = [
         "Comprehensive",
-        "Comprehensive",
-        "Comprehensive",
-        "Comprehensive"
+        "Return",
+        "Flexibility",
+        "Risk"
     ]
     let res = await axios.get(`/product/sortBy${indicator[props.indicator]}`)
 
@@ -44,7 +44,36 @@ const initComponent = async () => {
     }
 
 }
+const add = async (index: number, productId: number) => {//添加收藏，调用时候用@click="add(index, item.id)"
+  try {
+    const res = await axios.post('/product/changeFavState', {
+      id: productId,
+      name: list.value[index].name,
+      details: list.value[index].details,
+      price: list.value[index].price,
+      antiRisk: list.value[index].antiRisk,
+      flexibility: list.value[index].flexibility,
+      returnRate: list.value[index].returnRate,
+      state: list.value[index].state
+    });
+    if (res.data.code === 200) {
+     alert('收藏成功！');
+
+    } else {
+      alert(res.data.msg);
+    }
+  } catch (error) {
+    console.error('Error adding to favorites:', error);
+    showFailToast('收藏失败！');
+  }
+}
 initComponent()
+
+watch(() => props.indicator, (newIndicator, oldIndicator) => {
+  if (newIndicator !== oldIndicator) {
+    initComponent();
+  }
+});
 
 const props = defineProps(["indicator"])
 </script>
@@ -66,6 +95,7 @@ const props = defineProps(["indicator"])
                     <van-button
                             color="linear-gradient(to right, #81CAFE, #0396ff)"
                             @click="showSuccessToast('收藏成功！')"
+
                             block
                             size="large"
                     >

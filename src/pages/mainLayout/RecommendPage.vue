@@ -15,9 +15,9 @@ const activeIndicator = ref("0")
             v-model:active="activeIndicator"
     >
         <van-tab title="综合" name="0"></van-tab>
-        <van-tab title="属性1" name="1"></van-tab>
-        <van-tab title="属性2" name="2"></van-tab>
-        <van-tab title="属性3" name="3"></van-tab>
+        <van-tab title="收益率" name="1"></van-tab>
+        <van-tab title="灵活度" name="2"></van-tab>
+        <van-tab title="非风险性" name="3"></van-tab>
     </van-tabs>
     <recommend style="margin-bottom:3rem" :indicator="activeIndicator"/>
 	<!--    -->
