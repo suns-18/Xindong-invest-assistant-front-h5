@@ -11,7 +11,7 @@ const mapper = [{
         meta: {title: '主页 - 信东智能投顾'}
     },{
         path: '/riskConfig',
-        component: () => import('../pages/mainLayout/RiskConfig.vue'),
+        component: () => import('../pages/mainLayout/RiskQuesnaire.vue'),
         meta: {title: '风险设定 - 信东智能投顾'}
     },{
         path: '/recommend',
