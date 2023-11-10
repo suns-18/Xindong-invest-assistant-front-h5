@@ -4,7 +4,7 @@
 
         <div v-for="(question, questionIndex) in questions" :key="questionIndex">
             <h4>{{ questionIndex + 1 }}. {{ question.title.title }}</h4>
-            <van-radio-group v-model="answers[questionIndex]">
+            <van-radio-group v-model="answers[questionIndex].option">
                 <van-cell-group
                         inset
                 >
@@ -12,7 +12,7 @@
                               :key="option.id"
                               :title="`${indexToAlphabets(optionIndex)}. ${option.title}`"
                               clickable
-                              @click="answers[questionIndex] = option.id"
+                              @click="answers[questionIndex].option = option.id"
                     >
                         <template #right-icon>
                             <van-radio :name="option.id"/>
@@ -42,7 +42,7 @@ import axios from "../../ts/axios.ts";
 
 const riskConfigStore = useRiskConfigStore(pinia)
 
-const answers = ref<number[]>([]);
+const answers = ref([{id: 0, question: 0, option: 0}])
 const questions = ref([
     {
         "title": {
@@ -75,21 +75,34 @@ const submitAnswers = async () => {
         return
     }
 
+    answers.value.forEach((item, index) => {
+        answers.value[index].question
+            = questions.value[index].title.id
+    })
+
+    console.log(answers.value)
+
     showSuccessToast('提交成功')
     riskConfigStore.data = answers.value
+
 
     await router.push('/riskConfig/result');
 };
 
 const initComponent = async () => {
     let res = await axios.get(`/question/queryList`)
-    
-    if(!res.data["code"]){
+
+    if (!res.data["code"]) {
         showFailToast(res.data["msg"])
         return
     }
-    
+
+    answers.value.splice(0, answers.value.length)
     questions.value = res.data["data"]
+    questions.value.forEach((item, index) => {
+        answers.value.push({id: index + 1, question: item.title.id, option: 0})
+    })
+
 }
 initComponent()
 
