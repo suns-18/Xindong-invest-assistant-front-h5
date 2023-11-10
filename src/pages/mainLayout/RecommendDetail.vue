@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import router from "../../ts/router.ts";
 
-import Detail from "../../components/Detail.vue";
+const initComponent = () =>{
+    alert(router.currentRoute.value.params["productID"])
+}
+initComponent()
 </script>
 
 <template>
