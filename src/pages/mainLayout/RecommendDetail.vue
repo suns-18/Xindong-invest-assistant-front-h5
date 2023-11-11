@@ -2,7 +2,8 @@
 import router from "../../ts/router.ts";
 import axios from "../../ts/axios";
 import { ref } from "vue";
-import {showFailToast} from "vant";
+import {showFailToast, showSuccessToast} from "vant";
+import {Product} from "../../ts/model";
 
 const product = ref({
   "id": 0,
@@ -16,63 +17,106 @@ const product = ref({
 });
 
 const initComponent = async () => {
+
   let productID = router.currentRoute.value.params["productID"];
 
   try {
     let res = await axios.get(`/product/getById?id=${productID}`);
     product.value = res.data["data"];
+    if(product.value.state===1)
+    {
+      setButtonStyle(false);
+    }
+  else{
+      setButtonStyle(true);
+    }
   } catch (error) {
     console.error("Error fetching product:", error);
     alert("Error!");
   }
+
+
 };
-const add = async () => {//添加收藏，调用时候用@click="add(index, item.id)"
+
+const link = ref({
+  "id": 0,
+  "productId": 0,
+  "param": "string"
+});
+const purchase = async (item: Product) => {
   try {
-    const res = await axios.post('/product/changeFavState', {
-      id: product.value.id,
-      name: product.value.name,
-      details: product.value.details,
-      price: product.value.price,
-      antiRisk: product.value.antiRisk,
-      flexibility: product.value.flexibility,
-      returnRate: product.value.returnRate,
-      state: product.value.state
-    });
+
+    const res = await axios.get(`/product/findParamById?id=${item.id}`);
     if (res.data.code === 200) {
-      alert('收藏成功！');
-
-    } else {
-      alert(res.data.msg);
-    }
-  } catch (error) {
-    console.error('Error adding to favorites:', error);
-    showFailToast('收藏失败！');
-  }
-}
-
-const purchase = async () => {
-  try {
-    const purchaseData = {
-      id: product.value.id,
-      productId: product.value.id,
-      price: product.value.price,
-      amount: 1,
-      dealTime: new Date().toISOString(),
-      sold: 0
-    };
-
-    const res = await axios.post('/api/tradeRecord/purchase', purchaseData);
-
-    if (res.data.code === 200) {
-      alert('购买成功！');
+      link.value = res.data["data"]
+      console.log(link.value.param)
+      window.open(`https://xueqiu.com${link.value.param}`)
     } else {
       alert(res.data.msg);
     }
   }catch (error) {
     console.error('购买出错:', error);
   }
+
 };
+//动态按钮设置
+const ButtonColor = ref("linear-gradient(to right, #81CAFE, #0396ff)");
+const ButtonText = ref('添加收藏');
+const setButtonStyle =(sign:boolean)=>{
+  if(!sign){
+    ButtonColor.value = "linear-gradient(to right, #ff6034, #ee0a24)"
+    ButtonText.value = "取消收藏";
+  }
+  else{
+    ButtonColor.value = "linear-gradient(to right, #81CAFE, #0396ff)"
+    ButtonText.value = "添加收藏";
+  }
+}
+const setFavorite = async (item: Product) => {//添加收藏
+
+  if(item.state===0)
+  {
+    try {
+      const res = await axios.post('/product/changeFavState', {
+        id: item.id,
+        state: item.state
+      });
+      if (res.data.code === 200) {
+        showSuccessToast('收藏成功！')
+
+        item.state = 1
+        setButtonStyle(false);
+      } else {
+        showFailToast(res.data.msg)
+      }
+    } catch (error) {
+      console.error('Error adding to favorites:', error);
+      showFailToast('收藏失败！');
+    }
+  }
+  else {
+    try {
+      const res = await axios.post('/product/changeFavState', {
+        id: item.id,
+        state: item.state
+      });
+      if (res.data.code === 200) {
+        showSuccessToast('取消收藏成功！')
+
+        item.state = 0
+        setButtonStyle(true);
+      } else {
+        showFailToast(res.data.msg)
+      }
+    } catch (error) {
+      console.error('Error adding to favorites:', error);
+      showFailToast('收藏失败！');
+    }
+  }
+
+}
   initComponent();
+
 </script>
 
 <template>
@@ -87,20 +131,22 @@ const purchase = async () => {
       <van-button
           block
           color="linear-gradient(to right, #ff6034, #ee0a24)"
+          @click="purchase(product)"
       >
         <template #default>
           <van-icon name="cart" />
           点击跳转购买
         </template>
       </van-button>
+      <div class="product-border"></div>
       <van-button
-          @click="add"
+          @click="setFavorite(product)"
           block
-          color="linear-gradient(to right, #81CAFE, #0396ff)"
+          :color='ButtonColor'
       >
         <template #default>
-          <van-icon name="plus" />
-          添加收藏
+          <van-icon :name="ButtonIcon" />
+          {{ ButtonText }}
         </template>
       </van-button>
     </div>
@@ -115,5 +161,8 @@ const purchase = async () => {
 </template>
 
 <style scoped>
-
+.product-border {
+  border-bottom: 1px solid #ebedf0; /* 添加所需的边框颜色 */
+  margin-bottom: 5px;
+}
 </style>

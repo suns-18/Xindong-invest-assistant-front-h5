@@ -69,6 +69,24 @@ const add = async (index: number, productId: number) => {//添加收藏，调用
         showFailToast('收藏失败！');
     }
 }
+const deleteFavorite = async (item: Product) => {//取消收藏
+  try {
+    const res = await axios.post('/product/changeFavState', {
+      id: item.id,
+      state: item.state
+    });
+    if (res.data.code === 200) {
+      showSuccessToast('取消收藏成功！')
+
+      item.state = 0
+    } else {
+      showFailToast(res.data.msg)
+    }
+  } catch (error) {
+    console.error('Error adding to favorites:', error);
+    showFailToast('取消失败！');
+  }
+}
 initComponent()
 
 watch(() => props.indicator, (newIndicator, oldIndicator) => {
@@ -90,10 +108,11 @@ watch(() => props.indicator, (newIndicator, oldIndicator) => {
               :desc="item.details"
               @click="router.push(`/recommend/detail/${item.id}`)"
           >
-              <template #price>
-                  <h2 style="color: orangered">￥{{ item.price.toFixed(2) }}</h2>
-              </template>
+            <template #price>
+              <h2 style="color: orangered">￥{{ item.price.toFixed(2) }}</h2>
+            </template>
           </van-card>
+
         </van-col>
         <van-col span="4">
           <van-button

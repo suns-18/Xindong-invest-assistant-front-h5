@@ -72,7 +72,7 @@ onMounted(() => {
         <van-row>
             <van-col span="19">
                 <van-card
-                        :desc="item.detail"
+                        :desc="item.details"
                         :title="item.name"
                 >
                 <template #price>
@@ -106,6 +106,7 @@ onMounted(() => {
                 </van-row>
             </van-col>
         </van-row>
+        <div class="product-border"></div>
     </template>
     <br/>
     <br/>
@@ -117,5 +118,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
+.product-border {
+    border-bottom: 1px solid #ebedf0; /* 添加所需的边框颜色 */
+    margin-bottom: 5px;
+}
 </style>

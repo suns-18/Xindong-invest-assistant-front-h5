@@ -39,13 +39,15 @@ const mapper = [{
         component: () => import('../pages/mainLayout/ISResult.vue'),
         meta: {title: '完成模拟购买 - 信东智能投顾'}
     }, {
-        path: '/investSimulation/goPurchase',
+        path: '/investSimulation/goPurchase/:productID',
         component: () => import('../pages/mainLayout/ISGoPurchase.vue'),
-        meta: {title: '模拟购买 - 信东智能投顾'}
+        meta: {title: '模拟购买 - 信东智能投顾'},
+        param: ['productID']
     }, {
-        path: '/investSimulation/sell',
+        path: '/investSimulation/sell/:productID',
         component: () => import('../pages/mainLayout/ISSell.vue'),
-        meta: {title: '模拟卖出 - 信东智能投顾'}
+        meta: {title: '模拟卖出 - 信东智能投顾'},
+        param: ['productID']
     }, {
         path: '/record',
         component: () => import('../pages/mainLayout/Record.vue'),
