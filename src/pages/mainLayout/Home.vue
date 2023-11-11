@@ -1,6 +1,11 @@
 <script setup lang="ts">
 
 import Recommend from "../../components/Recommend.vue";
+import {ref} from "vue";
+
+const indicator = ref("0")
+const keyword = ref('')
+
 </script>
 
 <template>
@@ -9,10 +14,12 @@ import Recommend from "../../components/Recommend.vue";
     <van-divider></van-divider>
     <h3>产品搜索</h3>
     <van-search
-      placeholder="请输入搜索关键词"
-      input-align="center"
+            placeholder="请输入搜索关键词"
+            input-align="center"
+            v-model="keyword"
+            @clear="keyword=''"
     />
-    <recommend indicator="0"></recommend>
+    <recommend :indicator="indicator" :searchKeyword="keyword"/>
 </template>
 
 <style scoped>

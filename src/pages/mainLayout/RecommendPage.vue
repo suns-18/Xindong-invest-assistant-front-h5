@@ -2,13 +2,9 @@
 
 import Recommend from "../../components/Recommend.vue";
 import {ref, watch} from "vue";
-import axios from "axios";
 
 const activeIndicator = ref("0")
 const searchKeyword = ref('');
-
-
-
 
 </script>
 
@@ -26,7 +22,9 @@ const searchKeyword = ref('');
         <van-tab title="灵活度" name="2"></van-tab>
         <van-tab title="非风险性" name="3"></van-tab>
     </van-tabs>
-    <recommend style="margin-bottom:3rem" :indicator="activeIndicator" :searchKeyword="searchKeyword"/>
+    <recommend style="margin-bottom:3rem"
+               :indicator="activeIndicator"
+               :searchKeyword="searchKeyword"/>
 	<!--    -->
 	<!--    <p>没有符合需求的？-->
 	<!--        <van-button type="primary" block-->

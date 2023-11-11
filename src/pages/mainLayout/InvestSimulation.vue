@@ -66,7 +66,7 @@ onMounted(() => {
 <template>
     <van-search
             placeholder="请输入搜索关键词"
-            input-align="left"
+            input-align="center"
     />
     <template v-for="(item, index) in favList">
         <van-row>
