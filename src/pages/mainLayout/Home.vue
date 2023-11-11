@@ -4,7 +4,6 @@ import Recommend from "../../components/Recommend.vue";
 </script>
 
 <template>
-    <p class="text-center">欢迎阿米诺亚斯使用信东智能投资顾问</p>
     <p class="text-center">欢迎叶可使用信东智能投资顾问</p>
     <p class="text-center">爱东信东等东</p>
     <van-divider></van-divider>
@@ -13,7 +12,7 @@ import Recommend from "../../components/Recommend.vue";
       placeholder="请输入搜索关键词"
       input-align="center"
     />
-    <recommend></recommend>
+    <recommend indicator="0"></recommend>
 </template>
 
 <style scoped>

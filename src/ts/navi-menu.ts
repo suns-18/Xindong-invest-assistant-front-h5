@@ -19,9 +19,5 @@ export const naviMenu = [
         icon: 'user',
         title: '模拟持仓',
         to: '/investSimulation/purchased'
-    }, {
-        icon: 'records-o',
-        title: '交易记录',
-        to: '/record'
     }
 ]

@@ -1,7 +1,7 @@
 <template>
     <div class="risk-analysis">
         <van-cell center is-link @click="router.push('/riskConfig')">
-            <template #title >
+            <template #title>
                 <h2>我的风险评估结果</h2>
             </template>
             <template #value>
@@ -27,17 +27,32 @@
                     type="success">
             查看推荐的理财产品
         </van-button>
+        <!--    <van-button @click="getRecommendations"
+												block
+												style="margin-block:3rem"
+												type="success">
+							获取个性化推荐
+						</van-button>-->
+
+        <!-- 显示个性化推荐结果 -->
+        <div v-if="recommendations.length > 0">
+            <h3>个性化推荐结果：</h3>
+            <ul>
+                <li v-for="recommendation in recommendations" :key="recommendation.id">
+                    {{ recommendation.text }}
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue';
 import router from "../../ts/router.ts";
-import {useRiskConfigStore} from "../../ts/store/risk-config-store.ts";
-import pinia from "../../ts/store.ts";
+import {ref} from "vue"
+import axios from "../../ts/axios.ts";
 
-const answers = useRiskConfigStore(pinia).data || [];
-
+/*const answers = ref([{id: 0, question: 0, option: 0}]);
+const recommendations = ref([]);
 const scores = {
     q1: {A: 5, B: 10, C: 10, D: 5, E: 5},
     q2: {A: 5, B: 5, C: 10, D: 10, E: 5},
@@ -50,7 +65,7 @@ const scores = {
 
 const totalScore = computed(() => {
     let total = 0;
-    answers.forEach((answer, index) => {
+    answers.value.forEach((answer, index) => {
         const key = 'q' + (index + 1);
         if (scores[key] && scores[key][answer]) {
             total += scores[key][answer];
@@ -66,6 +81,65 @@ const riskLevel = computed(() => {
     if (totalScore.value <= 90) return '中高风险';
     return '高风险';
 });
+
+import axios from "../../ts/axios.ts";
+import {computed} from "vue";
+
+const getPersonalizedRecommendations = async () => {
+    try {
+        const stabilityResponse = await axios.get('/answer/stability');
+        const returnRateResponse = await axios.get('/answer/returnRate');
+        const antiRiskResponse = await axios.get('/answer/antiRisk');
+
+        const stabilityRecommendation = stabilityResponse.data.data;
+        const returnRateRecommendation = returnRateResponse.data.data;
+        const antiRiskRecommendation = antiRiskResponse.data.data;
+
+        const allRecommendations = {
+            stability: stabilityRecommendation,
+            returnRate: returnRateRecommendation,
+            antiRisk: antiRiskRecommendation,
+        };
+
+        console.log('个性化推荐结果：', allRecommendations);
+
+        return allRecommendations;
+    } catch (error) {
+        console.error('获取个性化推荐时出错：', error);
+        throw error;
+    }
+};*/
+const stability = ref("数据获取失败")
+const returnRate = ref("数据获取失败")
+const antiRiks = ref("数据获取失败")
+const initComponent = async () => {
+    try {
+        const stabilityResponse =
+          await axios.get('/answer/stability');
+        const returnRateResponse =
+          await axios.get('/answer/returnRate');
+        const antiRiskResponse =
+          await axios.get('/answer/antiRisk');
+        
+        const stabilityRecommendation = stabilityResponse.data.data;
+        const returnRateRecommendation = returnRateResponse.data.data;
+        const antiRiskRecommendation = antiRiskResponse.data.data;
+        
+        const allRecommendations = {
+            stability: stabilityRecommendation,
+            returnRate: returnRateRecommendation,
+            antiRisk: antiRiskRecommendation,
+        };
+        
+        console.log('个性化推荐结果：', allRecommendations);
+        
+        return allRecommendations;
+    } catch (error) {
+        console.error('获取个性化推荐时出错：', error);
+        throw error;
+    }
+}
+initComponent()
 
 </script>
 
