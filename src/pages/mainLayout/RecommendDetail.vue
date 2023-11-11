@@ -151,6 +151,13 @@ const setFavorite = async (item: Product) => {//添加收藏
       </van-button>
     </div>
   </div>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
 </template>
 
 <style scoped>
