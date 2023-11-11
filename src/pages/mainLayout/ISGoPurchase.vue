@@ -1,47 +1,78 @@
 <script setup lang="ts">
 
 import router from "../../ts/router.ts";
-import {useFavStore} from "../../ts/store/fav-store.ts";
-import pinia from "../../ts/store.ts";
 import {computed, ref} from "vue";
+import axios from "../../ts/axios.ts"
+import {showFailToast, showSuccessToast} from "vant";
 
-const favStore = useFavStore(pinia)
+const product = ref({
+      "id": 0,
+      "name": "string",
+      "details": "string",
+      "price": 0,
+      "antiRisk": 0,
+      "flexibility": 0,
+      "returnRate": 0,
+      "state": 0
+    
+})
+const tRecord = ref({
+    
+  "id": 0,
+  "productId": 0,
+  "price": 0,
+  "amount": 0,
+  "dealTime": "2023-11-11T09:30:41.232Z",
+  "sold": 0
 
-const investPrice = ref<string[]>([])
-const investCount = ref<number[]>([])
+})
+
 
 const totalPrice = computed(() => {
-    let sum = 0
-    favStore.data.forEach((item, index) => {
-        sum += Number(investPrice.value[index])
-            * investCount.value[index]
-    })
+    let sum = tRecord.value.price 
+            * tRecord.value.amount
     return sum
 })
-const goFinishPurchase = () => {
+const doPurchase = async() => {
+
+    tRecord.value.productId = product.value.id
+
+    let res = await axios.post(
+        `/tradeRecord/purchase`,
+        tRecord.value
+    )
+
+    if(!res.data["code"]){
+        showFailToast(res.data["msg"])
+        return
+    }
+    
+
+    showSuccessToast("购买成功！")
     router.push('/investSimulation/finished')
 }
-const initComponent = () => {
-    favStore.data.forEach((item) => {
-        investPrice.value.push(item.price)
-        investCount.value.push(0)
-    })
+const initComponent = async() => {
+    let productId = router.currentRoute.value.params["productID"]
+    let res = await axios.get(`/product/getById?id=${productId}`)
+
+    if(!res.data["code"]){
+        showFailToast(res.data["msg"])
+        return
+    }
+
+    product.value = res.data["data"]
 }
 
 initComponent()
 </script>
 
 <template>
-    <h4>已选的产品列表</h4>
-    <template v-for="(item,index) in favStore.data">
         <van-card
-                :desc="item.description"
-                :title="item.name"
-                :thumb="item.thumb"
+                :title="product.name"
         >
             <template #desc>
                 <strong style="color: orangered">
-                    ￥{{ item.price }}
+                    ￥{{ product.price }}
                 </strong>
             </template>
             <template #price>
@@ -49,22 +80,21 @@ initComponent()
                     <van-col span="12">
                         <van-field placeholder="输入买入价"
                                    left-icon="gold-coin-o"
-                                   v-model="investPrice[index]"
+                                   v-model="tRecord.price"
                                    type="number"
                         ></van-field>
                     </van-col>
                     <van-col span="4"></van-col>
                     <van-col span="8" :align="'center'">
-                        <van-stepper v-model="investCount[index]"
+                        <van-stepper v-model="tRecord.amount"
                                      theme="round"/>
                     </van-col>
                 </van-row>
             </template>
         </van-card>
-    </template>
     <van-submit-bar :price="totalPrice*100"
                     button-text="提交"
-                    @submit="goFinishPurchase">
+                    @submit="doPurchase">
     </van-submit-bar>
 </template>
 
