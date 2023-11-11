@@ -1,8 +1,6 @@
 <script setup lang="ts">
 
 import router from "../../ts/router.ts";
-import {usePurchasedStore} from "../../ts/store/purchased-store.ts";
-import pinia from "../../ts/store.ts";
 import {computed, reactive, ref} from "vue";
 import {showFailToast, showSuccessToast} from "vant";
 import axios from "../../ts/axios.ts";

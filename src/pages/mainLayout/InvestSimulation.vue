@@ -96,7 +96,7 @@ onMounted(() => {
                 <van-row>
                     <van-col>
                         <van-button type="primary"
-                            @click="goPurchase"
+                            @click="goPurchase(item.id)"
                             block
                             size="large">
                     <van-icon name="cart"></van-icon> <br/>
