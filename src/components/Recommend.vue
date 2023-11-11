@@ -86,11 +86,13 @@ watch(() => props.indicator, (newIndicator, oldIndicator) => {
       <van-row justify="center" align="center">
         <van-col span="20">
           <van-card
-              :price="item.price.toFixed(2)"
               :title="item.name"
               :desc="item.details"
               @click="router.push(`/recommend/detail/${item.id}`)"
           >
+              <template #price>
+                  <h2 style="color: orangered">￥{{ item.price.toFixed(2) }}</h2>
+              </template>
           </van-card>
         </van-col>
         <van-col span="4">

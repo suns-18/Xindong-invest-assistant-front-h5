@@ -105,6 +105,13 @@ const purchase = async () => {
       </van-button>
     </div>
   </div>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
 </template>
 
 <style scoped>
