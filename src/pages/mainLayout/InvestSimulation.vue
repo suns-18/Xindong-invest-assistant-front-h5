@@ -60,17 +60,17 @@ onMounted(() => {
     </van-cell>
     <van-search
             placeholder="请输入搜索关键词"
-            input-align="center"
+            input-align="left"
     />
 
     <van-cell center>
-        <template #title>
+        <!--        <template #title>
             <van-checkbox
                     :indeterminate="isIndeterminated"
                     v-model="isAllSelected"
                     @click="doSelectAll">全选
             </van-checkbox>
-        </template>
+        </template>-->
         <!--        <template #right-icon>
 										<van-button
 														type="primary"
