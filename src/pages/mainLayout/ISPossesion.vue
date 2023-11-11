@@ -5,6 +5,7 @@ import {computed, reactive, ref} from "vue";
 import {showFailToast, showSuccessToast} from "vant";
 import axios from "../../ts/axios.ts";
 import {localTime} from "../../ts/transcript.ts";
+import {Product} from "../../ts/model.ts";
 
 /*const purchasedStore = usePurchasedStore(pinia)
 
@@ -55,14 +56,13 @@ const tradeRecordList = ref([
             "state": 1
         },
         "price": 1,
-        "amount": 1,
         "dealTime": "2023-11-07T10:44:09.000+00:00",
         "sold": 0
     },
 ])
 
-const goSell = () => {
-    router.push('/investSimulation/sell')
+const goSell = (id: number) => {
+    router.push(`/investSimulation/sell/${id}`)
 }
 
 const getRecord = async () => {
