@@ -43,7 +43,7 @@ const initComponent = async () => {
   } else {
     list.value = res.data["data"]
   }
-
+}
 
 //添加收藏
 const add = async (index: number, productId: number) => {//添加收藏，调用时候用@click="add(index, item.id)"
@@ -75,9 +75,9 @@ watch(() => props.indicator, (newIndicator, oldIndicator) => {
   if (newIndicator !== oldIndicator) {
     initComponent();
   }
-});
+})
 
-const props = defineProps(["indicator"])
+
 </script>
 
 <template>
@@ -109,7 +109,7 @@ const props = defineProps(["indicator"])
           </van-button>
         </van-col>
       </van-row>
-
+      <div class="product-border"></div>
     </div>
     <br/>
     <br/>
