@@ -5,19 +5,19 @@
         <h2 class="analysis-title">我的风险评估结果</h2>
       </template>
       <template #value>
-        <a><h4>重新填写</h4></a >
+        <a><h4>重新填写</h4></a>
       </template>
     </van-cell>
 
     <!-- 显示风险评估结果 -->
     <van-divider />
-    <van-cell center title="非风险性" :value="result.antiRisk" />
+    <van-cell center title="非风险性" :value="result.antiRisk.toFixed(2)" />
     <van-divider />
 
-    <van-cell center title="回报率" :value="result.returnRate" />
+    <van-cell center title="回报率" :value="result.returnRate.toFixed(2)" />
     <van-divider />
 
-    <van-cell center title="稳定性" :value="result.stability" />
+    <van-cell center title="稳定性" :value="result.stability.toFixed(2)" />
     <van-divider />
   </div>
 </template>
