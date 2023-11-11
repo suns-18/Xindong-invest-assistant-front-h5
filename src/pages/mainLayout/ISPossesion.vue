@@ -107,7 +107,7 @@ initComponent()
                         <van-icon name="eye-o"/>
                     </template>
                     <template #text>
-                        <span>{{ stat.totalAssets.toFixed(2) }}</span>
+                        <span>￥{{ stat.totalAssets.toFixed(2) }}</span>
                     </template>
                 </van-grid-item>
                 <van-grid-item>
@@ -115,7 +115,7 @@ initComponent()
                         <span>总市值</span>
                     </template>
                     <template #text>
-                        <span>{{ stat.totalCurrentPrice.toFixed(2) }}</span>
+                        <span>￥{{ stat.totalCurrentPrice.toFixed(2) }}</span>
                     </template>
                 </van-grid-item>
                 <van-grid-item>
@@ -123,7 +123,7 @@ initComponent()
                         <span>当日参考盈亏</span>
                     </template>
                     <template #text>
-                        <span>{{ stat.dailyProfit.toFixed(2) }}</span>
+                        <span>￥{{ stat.dailyProfit.toFixed(2) }}</span>
                     </template>
                 </van-grid-item>
             </van-grid>
@@ -131,7 +131,7 @@ initComponent()
             <table>
                 <thead>
                 <tr>
-                    <th>产品名 </th>
+                    <th>产品名</th>
                     <th>盈亏情况</th>
                     <th>持有数量</th>
                     <th>成本<br/>现价</th>
@@ -154,7 +154,8 @@ initComponent()
                     </td>
                     <td>{{ item.amount }}</td>
                     <td>￥{{ item.purchasePrice }}<br/>
-                        ￥{{ item.product.price }}</td>
+                        ￥{{ item.product.price }}
+                    </td>
                     <td>{{ localTime(item.purchaseDate) }}</td>
                     <td>
                         <van-button type="danger"

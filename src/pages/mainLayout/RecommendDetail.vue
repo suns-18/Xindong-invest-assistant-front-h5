@@ -44,7 +44,7 @@ const link = ref({
 const purchase = async (item: Product) => {
     try {
 
-        const res = await axios.get(`/product/findParamById?id=${item.id}`);
+        const res = await axios.get(`/product/getParamById?id=${item.id}`);
         if (res.data.code === 200) {
             link.value = res.data["data"]
             console.log(link.value.param)
@@ -60,13 +60,16 @@ const purchase = async (item: Product) => {
 //动态按钮设置
 const ButtonColor = ref("linear-gradient(to right, #81CAFE, #0396ff)");
 const ButtonText = ref('添加收藏');
+const ButtonIcon = ref("")
 const setButtonStyle = (sign: boolean) => {
     if (!sign) {
         ButtonColor.value = "linear-gradient(to right, #ff6034, #ee0a24)"
         ButtonText.value = "取消收藏";
+        ButtonIcon.value = "cross"
     } else {
         ButtonColor.value = "linear-gradient(to right, #81CAFE, #0396ff)"
         ButtonText.value = "添加收藏";
+        ButtonIcon.value = "plus"
     }
 }
 const setFavorite = async (item: Product) => {//添加收藏
@@ -119,8 +122,8 @@ initComponent();
         <van-cell title="产品名" :value="product.name"/>
         <van-cell title="描述" :value="product.details"/>
         <van-cell title="价格" :value="product.price"/>
-        <van-cell title="回报率" :value="`${product.returnRate}%`"/>
-        <van-cell title="灵活度" :value="`${product.flexibility}年`"/>
+        <van-cell title="回报率" :value="`${product.returnRate}`"/>
+        <van-cell title="灵活度" :value="`${product.flexibility}`"/>
         <van-cell title="非风险性" :value="product.antiRisk"/>
         <div style="padding: 1rem">
             <van-button

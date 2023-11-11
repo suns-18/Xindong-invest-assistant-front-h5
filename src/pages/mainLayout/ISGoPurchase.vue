@@ -85,7 +85,7 @@ initComponent()
                         ></van-field>
                     </van-col>
                     <van-col span="4"></van-col>
-                    <van-col span="8" :align="'center'">
+                    <van-col span="8" style="text-align: right;justify-content: right">
                         <van-stepper v-model="tRecord.amount"
                                      theme="round"/>
                     </van-col>
