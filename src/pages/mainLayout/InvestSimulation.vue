@@ -1,51 +1,62 @@
 <script setup lang="ts">
 
 import router from "../../ts/router.ts";
-import {useFavStore} from "../../ts/store/fav-store.ts";
-import pinia from "../../ts/store.ts";
 import {computed, onMounted, ref} from "vue";
 import {showFailToast, showSuccessToast} from "vant";
+import axios from "../../ts/axios.ts"
+import Product from "../../ts/model.ts"
 
-const favStore = useFavStore(pinia)
 
-const select = ref<[boolean]>([])
 
-const initComponent = () => {
-    favStore.data.forEach((item) => {
-        select.value.push(false)
-    })
+const initComponent = async() => {
+    getList()
 }
 
-const isAllSelected = computed(() => {
-    return (getSelectedCount() == select.value.length)
-})
-const isIndeterminated = computed(() => {
-    let selectedCount = getSelectedCount()
-    return selectedCount > 0 && selectedCount < select.value.length
-})
+const favList = ref([{
+    "id": 0,
+      "name": "string",
+      "details": "string",
+      "price": 0,
+      "antiRisk": 0,
+      "flexibility": 0,
+      "returnRate": 0,
+      "state": 0
+}])
 
-const doSelectAll = () => {
-    select.value.forEach((item) => {
-        item = !item
-    })
+const goPurchase = (productId: number) => {
+    router.push(`/investSimulation/goPurchase/${productId}`)
 }
 
-const goPurchase = () => {
+const cancelFav = async (item: Product)=>{
+    let res = await axios.post('/product/changeFavState',
+    {
+       id: item.id,
+       state: item.state 
+    })
 
-    if (getSelectedCount() == 0) {
-        showFailToast('请选择至少一个产品')
+    if(!res.data["code"]){
+        showFailToast(res.data["msg"])
         return
     }
-    router.push('/investSimulation/goPurchase')
+
+    showSuccessToast("取消收藏成功！")
+
+    await getList()
 }
 
-const getSelectedCount = () => {
-    let selectedCount = 0
-    select.value.forEach((item) => {
-        if (item) selectedCount++
-    })
-    return selectedCount
+const getList = async ()=>{
+    let res = await axios.get("/product/fav")
+
+    if(!res.data["code"]){
+        showFailToast(res.data["msg"])
+        return
+    }
+
+    favList.value.splice(0, favList.value.length)
+
+    favList.value = res.data["data"]
 }
+
 onMounted(() => {
     initComponent()
 })
@@ -53,59 +64,46 @@ onMounted(() => {
 </script>
 
 <template>
-    <van-cell>
-        <template #title>
-            <h3>请选择要购买的产品</h3>
-        </template>
-    </van-cell>
     <van-search
             placeholder="请输入搜索关键词"
             input-align="left"
     />
-
-    <van-cell center>
-        <!--        <template #title>
-            <van-checkbox
-                    :indeterminate="isIndeterminated"
-                    v-model="isAllSelected"
-                    @click="doSelectAll">全选
-            </van-checkbox>
-        </template>-->
-        <!--        <template #right-icon>
-										<van-button
-														type="primary"
-														@click="goPurchase">
-												我选好了，点击模拟购买
-										</van-button>
-								</template>-->
-    </van-cell>
-    <template v-for="(item,index) in favStore.data">
+    <template v-for="(item, index) in favList">
         <van-row>
-            <van-col span="3">
-                <van-space align="center"
-                           fill
-                           style="padding: 16px;background-color: #f7f8fa">
-                    <van-checkbox v-model="select[index]"></van-checkbox>
-                </van-space>
-            </van-col>
-            <van-col span="16">
+            <van-col span="19">
                 <van-card
-                        @click="select[index] = !select[index]"
-                        :price="item.price"
-                        :desc="item.description"
+                        :desc="item.detail"
                         :title="item.name"
-                        :thumb="item.thumb"
                 >
+                <template #price>
+                    <h2 style="color:orangered">
+                    ￥{{item.price}}
+                </h2>
+                </template>
                 </van-card>
             </van-col>
             <van-col span="5">
-                <van-button type="danger"
-                            @click="showSuccessToast('取消成功！')"
+                <van-row>
+                    <van-col>
+                        <van-button type="danger"
+                            @click="cancelFav(item)"
                             block
                             size="large">
                     <van-icon name="cross"></van-icon> <br/>
                     取消收藏
+                </van-button></van-col>
+                </van-row>
+                <van-row>
+                    <van-col>
+                        <van-button type="primary"
+                            @click="goPurchase"
+                            block
+                            size="large">
+                    <van-icon name="cart"></van-icon> <br/>
+                    点击购买
                 </van-button>
+                    </van-col>
+                </van-row>
             </van-col>
         </van-row>
     </template>
@@ -116,21 +114,6 @@ onMounted(() => {
     <br/>
     <br/>
     <br/>
-    <van-submit-bar
-            button-text="下一步"
-            @submit="goPurchase">
-    </van-submit-bar>
-	<!--    <van-cell center
-								@click="router .push('/investSimulation/purchased')">
-					<template #title>
-							<h2>模拟投资</h2>
-					</template>
-						<template #value>
-											<a><h4>查看我的模拟资产</h4></a>
-									</template>
-			</van-cell>-->
-
-
 </template>
 
 <style scoped>
