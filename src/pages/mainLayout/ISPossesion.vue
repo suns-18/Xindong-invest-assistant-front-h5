@@ -46,12 +46,21 @@ const stat = ref({
 const tradeRecordList = ref([
     {
         "id": 1,
-        "productId": 1,
+        "product": {
+            "id": 605599,
+            "name": "菜百股份",
+            "details": "北京菜市口百货股份有限公司主营业务为黄金珠宝商品的原料采购、款式设计、连锁销售和品牌运营。公司主要产品包括黄金饰品、贵金属文化产品、贵金属投资产品，以及钻翠珠宝饰品。菜百股份是“全国文明单位”和“全国模范劳动关系和谐企业”，曾荣获“中国质量奖提名奖”、“企业信用评价AAA级信用单位”、“中国黄金第一家”、“中国黄金行业社会责任杰出贡献奖”、“中国改革开放40周年珠宝行业社会贡献奖”、“北京市人民政府质量奖提名奖”等诸多荣誉或称号。公司是上金所业务委员会的委员单位，是中国珠宝玉石首饰行业协会副会长单位和中国黄金协会副会长单位，是中国金币特许零售商和北京2022年冬奥会和冬残奥会组织委员会特许零售商。公司管理层作为全国珠宝玉石标准化技术委员会（TC298）委员和全国首饰标准化技术委员会（TC256）委员，参与制定、修订黄金珠宝国家标准和行业标准。2019年，公司成为“中国珠宝玉石首饰品牌集群”首批标杆品牌集群副主席成员单位，并通过“国家级商贸服务业标准化试点”验收。",
+            "price": 13.51,
+            "antiRisk": 0.9949,
+            "flexibility": 0.0019,
+            "returnRate": 0.034,
+            "state": 1
+        },
         "price": 1,
         "amount": 1,
         "dealTime": "2023-11-07T10:44:09.000+00:00",
-        "sold": 1
-    }
+        "sold": 0
+    },
 ])
 
 const goSell = () => {
@@ -168,13 +177,12 @@ initComponent()
                     <th>交易价格<br/>交易数</th>
                     <th>总计</th>
                     <th>购买时间</th>
-                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="(item,index) in tradeRecordList">
-                    <td><p>{{ item.productId }}</p>
-                        <p> {{ item.productId }}</p>
+                    <td><p>{{ item.product.name }}</p>
+                        <p> {{ item.product.id }}</p>
                     </td>
                     <td><p>￥{{ item.price.toFixed(2) }}</p>
 
@@ -183,15 +191,6 @@ initComponent()
                         {{ (item.amount * item.price).toFixed(2) }}
                     </td>
                     <td>{{ localTime(item.dealTime) }}</td>
-                    <td>
-                        <van-button type="danger"
-                                    size="large"
-                                    @click="goSell">
-                            <van-icon name="bill"/>
-                            <br/>
-                            卖出
-                        </van-button>
-                    </td>
                 </tr>
                 </tbody>
             </table>
