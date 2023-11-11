@@ -74,6 +74,7 @@ const getRecord = async () => {
     }
     tradeRecordList.value.splice(0, tradeRecordList.value.length)
     tradeRecordList.value = res.data["data"]
+
 }
 
 const getStat = async () => {
@@ -158,7 +159,7 @@ initComponent()
                     <td>
                         <van-button type="danger"
                                     size="large"
-                                    @click="goSell">
+                                    @click="goSell(item.product.id)">
                             <van-icon name="bill"/>
                             卖出
                         </van-button>
