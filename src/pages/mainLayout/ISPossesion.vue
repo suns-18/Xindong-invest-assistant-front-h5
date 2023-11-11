@@ -123,7 +123,7 @@ initComponent()
             <table>
                 <thead>
                 <tr>
-                    <th>产品名</th>
+                    <th>产品名 </th>
                     <th>盈亏情况</th>
                     <th>持有数量</th>
                     <th>成本<br/>现价</th>
