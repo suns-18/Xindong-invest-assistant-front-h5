@@ -19,7 +19,7 @@ const initComponent = async () => {
   let productID = router.currentRoute.value.params["productID"];
 
   try {
-    let res = await axios.get(`/product/getByID?id=${productID}`);
+    let res = await axios.get(`/product/getById?id=${productID}`);
     product.value = res.data["data"];
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -79,9 +79,10 @@ const purchase = async () => {
   <div style="margin-block:3rem">
     <van-cell title="产品名" :value="product.name" />
     <van-cell title="描述" :value="product.details" />
-    <van-cell title="利率" :value="`${product.returnRate}%`" />
-    <van-cell title="期限" :value="`${product.flexibility}年`" />
-    <van-cell title="风险" :value="product.antiRisk" />
+    <van-cell title="价格" :value="product.price" />
+    <van-cell title="回报率" :value="`${product.returnRate}%`" />
+    <van-cell title="灵活度" :value="`${product.flexibility}年`" />
+    <van-cell title="非风险性" :value="product.antiRisk" />
     <div style="padding: 1rem">
       <van-button
           block

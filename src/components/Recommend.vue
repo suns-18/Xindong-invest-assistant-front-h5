@@ -6,7 +6,7 @@ import {showFailToast, showSuccessToast} from "vant";
 import axios from "../ts/axios";
 import {Product} from "../ts/model.ts";
 
-
+//定义产品列表
 const list = ref<Product[]>([
     {
         "id": 0,
@@ -19,31 +19,81 @@ const list = ref<Product[]>([
         "state": 0
     }
 ],)
-
+//初始界面未搜索部分
+const props = defineProps(["indicator", "searchKeyword"]);//接收两个变量，搜索词和指标
 const initComponent = async () => {
+  if(props.searchKeyword.value!=='')
+  {
     let indicator = [
-        "Comprehensive",
-        "Return",
-        "Flexibility",
-        "Risk"
+      "Comprehensive",
+      "Return",
+      "Flexibility",
+      "Risk"
     ]
     let res = await axios.get(`/product/sortBy${indicator[props.indicator]}`)
 
     if (!res.data["code"]) {
-        showFailToast(res.data["msg"])
-        return
+      showFailToast(res.data["msg"])
+      return
     }
 
     if (props.indicator == "0") {
-        list.value.splice(0, list.value.length)
-        res.data.data.forEach((item) => {
-            list.value.push(item["product"])
-        })
+      list.value.splice(0, list.value.length)
+      res.data.data.forEach((item) => {
+        list.value.push(item["product"])
+      })
     } else {
-        list.value = res.data["data"]
+      list.value = res.data["data"]
     }
 
+  }else {
+  console.log(props.searchKeyword.value)
+    //doSearch()
+  }
+
 }
+watch(() => props.indicator, (newIndicator, oldIndicator) => {
+  if (newIndicator !== oldIndicator) {
+    initComponent();
+  }
+});
+
+watch(() => props.searchKeyword, (newSearchKeyword, oldSearchKeyword) => {
+  if (newSearchKeyword !== oldSearchKeyword) {
+    initComponent();
+  }
+});
+initComponent()
+
+//搜索功能
+/*const doSearch = () => {
+
+  let indicator = [
+    "Comprehensive",
+    "Return",
+    "Flexibility",
+    "Risk"
+  ]
+
+  let res = await axios.get(`/product/sortBy${indicator[props.indicator]}Part?name=${props.searchKeyword.value}`)
+
+  if (!res.data["code"]) {
+    showFailToast(res.data["msg"])
+    return
+  }
+
+  if (props.indicator == "0") {
+    list.value.splice(0, list.value.length)
+    res.data.data.forEach((item) => {
+      list.value.push(item["product"])
+    })
+  } else {
+    list.value = res.data["data"]
+  }
+}*/
+
+
+//添加收藏
 const add = async (index: number, productId: number) => {//添加收藏，调用时候用@click="add(index, item.id)"
   try {
     const res = await axios.post('/product/changeFavState', {
@@ -57,7 +107,7 @@ const add = async (index: number, productId: number) => {//添加收藏，调用
       state: list.value[index].state
     });
     if (res.data.code === 200) {
-     alert('收藏成功！');
+      alert('收藏成功！');
 
     } else {
       alert(res.data.msg);
@@ -67,15 +117,6 @@ const add = async (index: number, productId: number) => {//添加收藏，调用
     showFailToast('收藏失败！');
   }
 }
-initComponent()
-
-watch(() => props.indicator, (newIndicator, oldIndicator) => {
-  if (newIndicator !== oldIndicator) {
-    initComponent();
-  }
-});
-
-const props = defineProps(["indicator"])
 </script>
 
 <template>
@@ -107,7 +148,7 @@ const props = defineProps(["indicator"])
                     </van-button>
                 </van-col>
             </van-row>
-
+          <div class="product-border"></div>
         </div>
         <br/>
         <br/>
@@ -120,5 +161,8 @@ const props = defineProps(["indicator"])
 </template>
 
 <style scoped>
-
+.product-border {
+  border-bottom: 1px solid #ebedf0; /* 添加所需的边框颜色 */
+  margin-bottom: 5px;
+}
 </style>
