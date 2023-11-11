@@ -46,23 +46,18 @@ const initComponent = async () => {
 }
 
 //添加收藏
-const add = async (index: number, productId: number) => {//添加收藏，调用时候用@click="add(index, item.id)"
+const addFavorite = async (item: Product) => {//添加收藏，调用时候用@click="add(index, item.id)"
     try {
         const res = await axios.post('/product/changeFavState', {
-            id: productId,
-            name: list.value[index].name,
-            details: list.value[index].details,
-            price: list.value[index].price,
-            antiRisk: list.value[index].antiRisk,
-            flexibility: list.value[index].flexibility,
-            returnRate: list.value[index].returnRate,
-            state: list.value[index].state
+            id: item.id,
+            state: item.state
         });
         if (res.data.code === 200) {
-            alert('收藏成功！');
+          showSuccessToast('收藏成功！')
 
+          item.state = 1
         } else {
-            alert(res.data.msg);
+          showFailToast(res.data.msg)
         }
     } catch (error) {
         console.error('Error adding to favorites:', error);
@@ -117,8 +112,8 @@ watch(() => props.indicator, (newIndicator, oldIndicator) => {
         <van-col span="4">
           <van-button
               color="linear-gradient(to right, #81CAFE, #0396ff)"
-              @click="showSuccessToast('收藏成功！')"
-
+              @click="addFavorite(item)"
+              v-if="!item.state"
               block
               size="large"
           >
@@ -126,6 +121,18 @@ watch(() => props.indicator, (newIndicator, oldIndicator) => {
               <van-icon name="plus"/>
               <br/>
               添加收藏
+            </template>
+          </van-button>
+          <van-button
+              color="linear-gradient(to right, #ff6034, #ee0a24)"
+              @click="deleteFavorite(item)"
+              v-else
+              block
+              size="large"
+          >
+            <template #default>
+              <van-icon/>
+              取消收藏
             </template>
           </van-button>
         </van-col>
