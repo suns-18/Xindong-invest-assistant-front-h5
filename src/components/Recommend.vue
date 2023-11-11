@@ -22,13 +22,58 @@ const list = ref<Product[]>([
 //初始界面未搜索部分
 const props = defineProps(["indicator", "searchKeyword"]);//接收两个变量，搜索词和指标
 const initComponent = async () => {
+  if(props.searchKeyword.trim()==="") {
+    let indicator = [
+      "Comprehensive",
+      "Return",
+      "Flexibility",
+      "Risk"
+    ]
+    let res = await axios.get(`/product/sortBy${indicator[props.indicator]}`)
+
+    if (!res.data["code"]) {
+      showFailToast(res.data["msg"])
+      return
+    }
+
+    if (props.indicator == "0") {
+      list.value.splice(0, list.value.length)
+      res.data.data.forEach((item) => {
+        list.value.push(item["product"])
+      })
+    } else {
+      list.value = res.data["data"]
+    }
+
+  }else {
+    //console.log(props.searchKeyword.value)
+    await doSearch()
+  }
+
+}
+watch(() => props.indicator, (newIndicator, oldIndicator) => {
+  if (newIndicator !== oldIndicator) {
+    initComponent();
+  }
+});
+
+watch(() => props.searchKeyword, (newSearchKeyword, oldSearchKeyword) => {
+  if (newSearchKeyword !== oldSearchKeyword) {
+    initComponent();
+  }
+});
+
+//搜索功能
+const doSearch = async() => {
+
   let indicator = [
     "Comprehensive",
     "Return",
     "Flexibility",
     "Risk"
   ]
-  let res = await axios.get(`/product/sortBy${indicator[props.indicator]}`)
+
+  let res = await axios.get(`/product/sortBy${indicator[props.indicator]}Part?name=${props.searchKeyword}`)
 
   if (!res.data["code"]) {
     showFailToast(res.data["msg"])
